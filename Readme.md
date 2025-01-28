@@ -1,6 +1,6 @@
 # RAI Meme Coin Market Analyzer
 
-![RAI Logo](https://www.raisol.xyz/logo.png)
+![RAI Logo](https://github.com/user-attachments/assets/6f5e5bb3-0782-4d4b-9847-ca9e01cf6ff6)
 
 **RAI Meme Coin Market Analyzer** is a personalized AI model designed to analyze the meme coin market and provide accurate forecasts for specific tokens. The model combines advanced machine learning algorithms with unique metrics to assess the growth, popularity, and potential of meme coins in the Solana ecosystem and beyond.
 
