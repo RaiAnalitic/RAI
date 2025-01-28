@@ -1,4 +1,4 @@
-# RAI Meme Coin Market Analyzer
+# RAI shitcoin market analyzer
 
 ![RAI](https://github.com/user-attachments/assets/77414c95-fca4-4da4-9112-28b18eef6c67)
 
