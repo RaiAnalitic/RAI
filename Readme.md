@@ -103,12 +103,6 @@ Join the discussion, share feedback, and help improve the project!
 
 ---
 
-## 🛡 License
-
-This project is distributed under the MIT License. See the [LICENSE](LICENSE) file for more details.
-
----
-
 ## 💡 Contact
 
-For questions or suggestions, contact us at: support@raisol.xyz.
+For questions or suggestions, contact us at: raiaisolana@gmail.com.
