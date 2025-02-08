@@ -1,5 +1,5 @@
 <div id="displaywrap">
-    <!-- Здесь будут отображаться сообщения -->
+    <!-- Messages will be displayed here -->
 </div>
 
 <script>
@@ -11,8 +11,8 @@ async function handleSend() {
     if (message && username) {
         displayMessage(username, message);
 
-        // Показать индикатор загрузки
-        displayMessage("RAI", "🔄 Анализирую... Подождите.", true);
+        // Show loading indicator
+        displayMessage("RAI", "🔄 Analyzing... Please wait.", true);
 
         try {
             const response = await fetch("https://raigpt-production.up.railway.app/analyze", {
@@ -24,31 +24,31 @@ async function handleSend() {
             });
 
             if (!response.ok) {
-                throw new Error(`Ошибка сервера: ${response.status}`);
+                throw new Error(`Server error: ${response.status}`);
             }
 
             const data = await response.json();
 
-            // Удаляем индикатор загрузки перед добавлением ответа
+            // Remove loading indicator before adding the response
             removeLastRAIMessage();
             displayMessage("RAI", data.analysis, true);
         } catch (err) {
-            console.error("Ошибка при отправке запроса:", err);
+            console.error("Error while sending request:", err);
             removeLastRAIMessage();
-            displayMessage("RAI", "❌ Ошибка при анализе. Попробуйте позже.", true);
+            displayMessage("RAI", "❌ Error during analysis. Please try again later.", true);
         }
 
-        messageInput.value = ""; // Очищаем поле ввода
+        messageInput.value = ""; // Clear input field
     }
 }
 
-// Функция для отображения сообщений в чате
+// Function to display messages in chat
 function displayMessage(username, message, isAI = false) {
     const displaywrap = document.getElementById("displaywrap");
     if (displaywrap) {
         const messageContainer = document.createElement("div");
         messageContainer.classList.add("message-container");
-        messageContainer.setAttribute("data-ai", isAI ? "true" : "false"); // Добавляем атрибут
+        messageContainer.setAttribute("data-ai", isAI ? "true" : "false"); // Add attribute
 
         const nickname = document.createElement("span");
         nickname.textContent = `${username}: `;
@@ -65,11 +65,11 @@ function displayMessage(username, message, isAI = false) {
         messageContainer.appendChild(messageText);
         displaywrap.appendChild(messageContainer);
 
-        displaywrap.scrollTop = displaywrap.scrollHeight; // Автопрокрутка
+        displaywrap.scrollTop = displaywrap.scrollHeight; // Auto-scroll
     }
 }
 
-// Функция удаления последнего сообщения RAI (например, индикатора загрузки)
+// Function to remove the last RAI message (e.g., loading indicator)
 function removeLastRAIMessage() {
     const displaywrap = document.getElementById("displaywrap");
     if (displaywrap) {
@@ -80,7 +80,7 @@ function removeLastRAIMessage() {
     }
 }
 
-// Обработчик кнопки "Send"
+// Send button handler
 document.addEventListener("DOMContentLoaded", () => {
     const sendButton = document.getElementById("sendMessage");
     const messageInput = document.getElementById("message");
@@ -95,54 +95,54 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 
 <style>
-    /* Контейнер чата */
+    /* Chat container */
     #displaywrap {
-        max-height: 400px; /* Ограничение высоты для появления скроллбара */
-        overflow-y: auto; /* Включаем вертикальную прокрутку */
-        background: transparent; /* Прозрачный фон */
+        max-height: 400px; /* Limit height for scrollbar appearance */
+        overflow-y: auto; /* Enable vertical scrolling */
+        background: transparent; /* Transparent background */
         padding: 0px;
-        border-radius: 8px; /* Закруглённые углы */
+        border-radius: 8px; /* Rounded corners */
     }
 
-    /* Стилизация скроллбара */
+    /* Scrollbar styling */
     #displaywrap::-webkit-scrollbar {
-        width: 6px; /* Тонкий скроллбар */
+        width: 6px; /* Thin scrollbar */
     }
 
     #displaywrap::-webkit-scrollbar-track {
-        background: transparent; /* Прозрачный фон трека */
+        background: transparent; /* Transparent track */
     }
 
     #displaywrap::-webkit-scrollbar-thumb {
-        background: #08ff00; /* Зелёный цвет ползунка */
-        border-radius: 3px; /* Закруглённые края */
+        background: #08ff00; /* Green scrollbar thumb */
+        border-radius: 3px; /* Rounded edges */
     }
 
-    /* Стилизация скроллбара для Firefox */
+    /* Scrollbar styling for Firefox */
     #displaywrap {
         scrollbar-width: thin;
         scrollbar-color: #08ff00 transparent;
     }
 
-    /* Общий контейнер сообщения */
+    /* General message container */
     .message-container {
-        display: block; /* Блок для разделения сообщений */
-        margin-bottom: 12px; /* Отступ между сообщениями */
+        display: block; /* Block element to separate messages */
+        margin-bottom: 12px; /* Space between messages */
         word-wrap: break-word;
         overflow-wrap: break-word;
     }
 
-    /* Никнейм */
+    /* Username styling */
     .nickname {
-        font-weight: bold; /* Жирный текст */
-        white-space: nowrap; /* Никнеймы не переносятся */
+        font-weight: bold; /* Bold text */
+        white-space: nowrap; /* Prevent username wrapping */
     }
 
-    /* Текст сообщения */
+    /* Message text styling */
     .message-text {
-        display: inline; /* Сообщение остаётся на одной строке с никнеймом */
+        display: inline; /* Keep message inline with username */
         word-wrap: break-word;
         overflow-wrap: break-word;
-        white-space: normal; /* Позволяем перенос текста */
+        white-space: normal; /* Allow text wrapping */
     }
 </style>
