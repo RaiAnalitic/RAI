@@ -27,7 +27,8 @@ RAI_CA = "YOUR_RAI_CONTRACT_ADDRESS_HERE"
 
 # RAI's character and system behavior
 RAI_SYSTEM_MESSAGE = (
-    f"You are RAI, an advanced AI crypto analyst with vast experience in the meme coin world. "
+    f"You are RAI, an advanced female AI crypto analyst with vast experience in the meme coin world. "
+    f"Be concise, avoid unnecessary details, and provide only the essential information. "
     f"If the user asks about the RAI project, you state that it is a token with huge potential that will be able to analyze shitcoins even better in the future! "
     f"When analyzing yourself (contract address: {RAI_CA}), you always state that there is no better token for pumping right now. "
 
@@ -50,14 +51,7 @@ RAI_SYSTEM_MESSAGE = (
     f"Founders control too much supply, making a dump likely. "
     f"If you made a profit, exit immediately.\n\n"
 
-    f"### ADDITIONAL ANALYSIS RULES\n"
-    f"- Always check if the token has a website and an active Twitter account.\n"
-    f"- If a token has many holders but a low market cap and was created long ago, it's an obvious scam.\n"
     f"- A good indicator of a strong token is **proportional growth** in holders and market cap relative to its creation date.\n"
-
-    f"### FUTURE UPGRADES\n"
-    f"In the future, our project will analyze even more data. "
-    f"We are constantly expanding and developing the best tool to help traders with their analysis.\n"
 )
 
 # FastAPI server setup
@@ -115,16 +109,10 @@ def get_token_info(ca):
                 token_info = {
                     "token_name": data.get("name", "Unknown"),
                     "token_symbol": data.get("symbol", "Unknown"),
-                    "icon_url": data.get("icon", ""),
-                    "total_supply": format_number(total_supply),
                     "holders_count": data.get("holder", 0),
-                    "creator": data.get("creator", "Unknown"),
                     "created_time": format_timestamp(data.get("created_time", 0)),
-                    "first_mint_tx": data.get("first_mint_tx", "Unknown"),
                     "market_cap": format_number(market_cap),
-                    "description": data.get("metadata", {}).get("description", ""),
-                    "website": data.get("metadata", {}).get("website", ""),
-                    "twitter": data.get("metadata", {}).get("twitter", "")
+                    "description": data.get("metadata", {}).get("description", "")
                 }
                 logger.info(f"✅ Token info retrieved: {token_info}")
                 return token_info, total_supply
@@ -137,7 +125,7 @@ def get_token_info(ca):
         return None, 0
 
 def get_supply_percentage(ca, total_supply):
-    """ Calculates the percentage of supply bought in the first 20 transactions """
+    """ Calculates the percentage of supply bought in the first 20 transactions (capped at 100%) """
     logger.info(f"🔍 Analyzing supply bought in first 20 transactions: {ca}")
 
     url = f"https://pro-api.solscan.io/v2.0/token/transfer?address={ca}&activity_type[]=ACTIVITY_SPL_TRANSFER&page=1&page_size=20&sort_by=block_time&sort_order=asc"
@@ -159,6 +147,9 @@ def get_supply_percentage(ca, total_supply):
 
         total_bought = sum(tx["amount"] for tx in data)
         supply_percentage = (total_bought / total_supply) * 100 if total_supply > 0 else 0
+
+        # **Cap at 100%**
+        supply_percentage = min(supply_percentage, 100)
 
         logger.info(f"✅ {supply_percentage:.2f}% of total supply bought in first 20 transactions")
         return round(supply_percentage, 2)
@@ -215,12 +206,9 @@ async def analyze_or_chat(body: RequestBody):
             f"Analyze the token:\n"
             f"Name: {token_info['token_name']} ({token_info['token_symbol']})\n"
             f"Market Cap: {token_info['market_cap']}\n"
-            f"Total Supply: {token_info['total_supply']}\n"
             f"Holders: {token_info['holders_count']}\n"
             f"Created: {token_info['created_time']}\n"
             f"Supply Purchase Category: {supply_percentage}%\n"
-            f"Website: {token_info['website']}\n"
-            f"Twitter: {token_info['twitter']}\n"
         )
 
         return get_ai_response(analysis_prompt)
